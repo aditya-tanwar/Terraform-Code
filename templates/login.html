@@ -32,17 +32,23 @@
             box-sizing: border-box;
         }
         input[type="submit"] {
-            background-color: #007bff;
+            background-color: #623CE4; /* Color code of HashiCorp Terraform logo */
             color: #fff;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         input[type="submit"]:hover {
-            background-color: #0056b3;
+            background-color: #4C28C8; /* Darker shade for hover effect */
         }
     </style>
 </head>
 <body>
+    <!-- Logo and Application Name -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="/static/terraform_logo.png" alt="Terraform Logo" style="height: 50px;">
+        <h1>Terraform API Runner</h1>
+    </div>
+
     <div class="container">
         <h2>Login</h2>
         <form id="loginForm" action="/login" method="POST">
