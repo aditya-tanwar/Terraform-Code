@@ -1,92 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Call</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            text-align: center;
-        }
-        label {
-            font-weight: bold;
-        }
-        select, input[type="text"], input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h2>Make an API Call</h2>
-        <form action="/api_call" method="POST">
-            <label for="endpoint">Select API Call:</label><br>
-            <select id="endpoint" name="endpoint">
-                <option value="account_details">Get Account Details</option>
-                <option value="list_workspaces">List Workspaces</option>
-                <option value="workspace_runs">Get Workspace Runs</option>
-                <!-- Add more options for other API calls -->
-            </select><br>
-            <label for="token">Token:</label><br>
-            <input type="text" id="token" name="token" required><br> <!-- Token input field -->
-            
-            <!-- Input field for organization name, only visible for "List Workspaces" option -->
-            <div id="organization_input" style="display: none;">
-                <label for="organization">Organization Name:</label><br>
-                <input type="text" id="organization" name="organization"><br>
-            </div>
+    <h1>Make an API Call</h1>
+    <form method="post" action="{{ url_for('api_call') }}">
+        <label for="api_type">API Type:</label>
+        <select id="api_type" name="api_type">
+            <option value="account">Account</option>
+            <option value="workspace">Workspace</option>
+        </select>
+        <br>
 
-            <!-- Input field for workspace ID, only visible for "Get Workspace Runs" option -->
-            <div id="workspace_id_input" style="display: none;">
-                <label for="workspace_id">Workspace ID:</label><br>
-                <input type="text" id="workspace_id" name="workspace_id"><br>
-            </div>
-            
-            <input type="submit" value="Send Request">
-        </form>
-    </div>
+        <label for="endpoint">Endpoint:</label>
+        <select id="endpoint" name="endpoint">
+            <option value="">Select API Type First</option>
+        </select>
+        <br>
+
+        <div id="additional-fields"></div>
+
+        <label for="token">Token:</label>
+        <input type="text" id="token" name="token" required>
+        <br>
+
+        <button type="submit">Submit</button>
+    </form>
 
     <script>
-        // JavaScript to show/hide input fields based on selected endpoint
-        document.getElementById('endpoint').addEventListener('change', function() {
-            var organizationInput = document.getElementById('organization_input');
-            var workspaceIdInput = document.getElementById('workspace_id_input');
-            if (this.value === 'list_workspaces') {
-                organizationInput.style.display = 'block';
-            } else {
-                organizationInput.style.display = 'none';
-            }
-            if (this.value === 'workspace_runs') {
-                workspaceIdInput.style.display = 'block';
-            } else {
-                workspaceIdInput.style.display = 'none';
-            }
+        $(document).ready(function() {
+            $('#api_type').change(function() {
+                var apiType = $(this).val();
+                $.ajax({
+                    url: '/get_endpoints/' + apiType,
+                    method: 'GET',
+                    success: function(data) {
+                        $('#endpoint').empty();
+                        $('#endpoint').append('<option value="">Select Endpoint</option>');
+                        $.each(data, function(index, value) {
+                            $('#endpoint').append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    }
+                });
+            });
+
+            $('#endpoint').change(function() {
+                var endpoint = $(this).val();
+                if (endpoint === 'list_workspaces' || endpoint === 'workspace_runs') {
+                    $('#additional-fields').html('<label for="organization">Organization:</label><input type="text" id="organization" name="organization" required><br>');
+                } else {
+                    $('#additional-fields').empty();
+                }
+
+                if (endpoint === 'workspace_runs') {
+                    $('#additional-fields').append('<label for="workspace_id">Workspace ID:</label><input type="text" id="workspace_id" name="workspace_id" required><br>');
+                }
+            });
         });
     </script>
 </body>
