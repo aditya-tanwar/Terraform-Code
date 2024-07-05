@@ -1,0 +1,23 @@
+{
+    "Accounts": [
+        {
+            "Id": "530179036178",
+            "Arn": "arn:aws:organizations::530179036178:account/o-ks7cy0mlsq/530179036178",
+            "Email": "awsaditya07@gmail.com",
+            "Name": "aws aditya",
+            "Status": "ACTIVE",
+            "JoinedMethod": "INVITED",
+            "JoinedTimestamp": "2024-07-03T20:13:07.305000+05:30"
+        },
+        {
+            "Id": "630179036178",
+            "Arn": "arn:aws:organizations::630179036178:account/o-ks7cy0mlsq/630179036178",
+            "Email": "test@gmail.com",
+            "Name": "aws test",
+            "Status": "ACTIVE",
+            "JoinedMethod": "INVITED",
+            "JoinedTimestamp": "2024-07-03T20:13:07.305000+05:30"
+        }
+    ]
+}
+
